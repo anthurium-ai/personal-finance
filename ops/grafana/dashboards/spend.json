@@ -2,8 +2,9 @@
   "uid": "pf-spend",
   "title": "Personal Finance – Spend (MTD)",
   "schemaVersion": 38,
-  "version": 1,
+  "version": 2,
   "refresh": "10s",
+  "time": {"from": "now-45d", "to": "now"},
   "panels": [
     {
       "type": "barchart",
@@ -11,22 +12,37 @@
       "gridPos": {"x": 0, "y": 0, "w": 24, "h": 10},
       "targets": [
         {
-          "expr": "pf_spend_by_category_mtd_cents",
+          "expr": "topk(12, pf_spend_by_category_mtd_cents)",
           "legendFormat": "{{category}}"
         }
-      ]
+      ],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
+    },
+    {
+      "type": "barchart",
+      "title": "Top merchants (MTD)",
+      "gridPos": {"x": 0, "y": 10, "w": 24, "h": 10},
+      "targets": [
+        {
+          "expr": "topk(12, pf_spend_by_merchant_mtd_cents)",
+          "legendFormat": "{{merchant}}"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
     },
     {
       "type": "stat",
       "title": "Income (MTD)",
-      "gridPos": {"x": 0, "y": 10, "w": 12, "h": 6},
-      "targets": [{"expr": "pf_income_mtd_cents"}]
+      "gridPos": {"x": 0, "y": 20, "w": 12, "h": 6},
+      "targets": [{"expr": "pf_income_mtd_cents"}],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
     },
     {
       "type": "stat",
       "title": "Expense (MTD)",
-      "gridPos": {"x": 12, "y": 10, "w": 12, "h": 6},
-      "targets": [{"expr": "pf_expense_mtd_cents"}]
+      "gridPos": {"x": 12, "y": 20, "w": 12, "h": 6},
+      "targets": [{"expr": "pf_expense_mtd_cents"}],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
     }
   ]
 }
