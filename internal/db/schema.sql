@@ -38,6 +38,24 @@ CREATE TABLE IF NOT EXISTS transactions (
   UNIQUE(row_hash)
 );
 
+CREATE TABLE IF NOT EXISTS category_rules (
+  id INTEGER PRIMARY KEY,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+  enabled INTEGER NOT NULL DEFAULT 1,
+
+  match_contains TEXT NOT NULL,
+  category_norm TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS merchant_category_overrides (
+  id INTEGER PRIMARY KEY,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+
+  merchant_norm TEXT NOT NULL,
+  category_norm TEXT NOT NULL,
+  UNIQUE(merchant_norm)
+);
+
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(txn_date);
 CREATE INDEX IF NOT EXISTS idx_transactions_category ON transactions(category_norm);
 CREATE INDEX IF NOT EXISTS idx_transactions_merchant ON transactions(merchant_norm);

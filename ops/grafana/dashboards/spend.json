@@ -1,0 +1,32 @@
+{
+  "uid": "pf-spend",
+  "title": "Personal Finance – Spend (MTD)",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "barchart",
+      "title": "Spend by category (MTD)",
+      "gridPos": {"x": 0, "y": 0, "w": 24, "h": 10},
+      "targets": [
+        {
+          "expr": "pf_spend_by_category_mtd_cents",
+          "legendFormat": "{{category}}"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Income (MTD)",
+      "gridPos": {"x": 0, "y": 10, "w": 12, "h": 6},
+      "targets": [{"expr": "pf_income_mtd_cents"}]
+    },
+    {
+      "type": "stat",
+      "title": "Expense (MTD)",
+      "gridPos": {"x": 12, "y": 10, "w": 12, "h": 6},
+      "targets": [{"expr": "pf_expense_mtd_cents"}]
+    }
+  ]
+}

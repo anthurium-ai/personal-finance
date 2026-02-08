@@ -1,0 +1,38 @@
+{{define "edit_tx"}}{{template "layout" .}}{{end}}
+{{define "title"}}Edit transaction · pfportal{{end}}
+{{define "content"}}
+<h2>Edit transaction</h2>
+
+<p class="muted">ID {{.Tx.ID}} · {{.Tx.Date}} · {{.Tx.Amount}}</p>
+<p><span class="pill">raw</span> {{.Tx.MerchantRaw}} · <span class="muted">{{.Tx.Details}}</span></p>
+
+<form action="/tx/{{.Tx.ID}}" method="post">
+  <div class="row">
+    <label>Category</label>
+    <input name="category_norm" value="{{.Tx.Category}}" style="width: 320px" />
+  </div>
+  <div class="row" style="margin-top:10px">
+    <label>Merchant</label>
+    <input name="merchant_norm" value="{{.Tx.Merchant}}" style="width: 320px" />
+  </div>
+  <div style="margin-top:10px">
+    <label>Notes</label><br/>
+    <textarea name="notes" rows="4" style="width: 520px">{{.Tx.Notes}}</textarea>
+  </div>
+  <div class="row" style="margin-top:12px">
+    <button type="submit">Save</button>
+    <a href="/transactions">Back</a>
+  </div>
+</form>
+
+{{if .Suggestion}}
+  <h3>Suggestion</h3>
+  <p><strong>{{.Suggestion.Category}}</strong> <span class="pill">{{.Suggestion.Source}}</span></p>
+  <p class="muted">{{.Suggestion.Reason}}</p>
+{{end}}
+
+<form action="/tx/{{.Tx.ID}}/suggest" method="post" style="margin-top:10px">
+  <button type="submit">Suggest category (Codex)</button>
+</form>
+
+{{end}}
