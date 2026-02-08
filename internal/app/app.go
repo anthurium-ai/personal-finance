@@ -11,14 +11,17 @@ import (
 	"time"
 
 	"github.com/anthurium-ai/personal-finance/internal/importer"
+	"github.com/anthurium-ai/personal-finance/internal/metrics"
 	"github.com/anthurium-ai/personal-finance/internal/web"
 	"github.com/go-chi/chi/v5"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type App struct {
 	DB   *sql.DB
 	Tmpl *web.Templates
+	Met  *metrics.Collector
 }
 
 type Config struct {
@@ -30,12 +33,19 @@ func (a *App) Router() http.Handler {
 	// pages
 	r.Get("/", a.handleUploadForm)
 	r.Post("/upload", a.handleUpload)
-	// TODO: transactions CRUD
-		r.Get("/transactions", a.handleTransactions)
-		r.Get("/imports", a.handleImports)
 
-	// metrics
-	r.Handle("/metrics", promhttp.Handler())
+	r.Get("/transactions", a.handleTransactions)
+	r.Get("/imports", a.handleImports)
+
+	r.Get("/tx/{id}", a.handleEditTx)
+	r.Post("/tx/{id}", a.handleSaveTx)
+	r.Post("/tx/{id}/suggest", a.handleSuggestTx)
+
+	// metrics (refresh on scrape)
+	r.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) {
+		_ = a.Met.Refresh(r.Context())
+		promhttp.Handler().ServeHTTP(w, r)
+	})
 	return r
 }
 
@@ -64,7 +74,7 @@ func (a *App) handleUpload(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) handleTransactions(w http.ResponseWriter, r *http.Request) {
 	// KISS for now: just show latest 50.
-	rows, err := a.DB.Query(`SELECT id, txn_date, amount_cents, category_norm, merchant_norm, details FROM transactions ORDER BY txn_date DESC, id DESC LIMIT 50`)
+	rows, err := a.DB.Query(`SELECT id, txn_date, amount_cents, category_norm, merchant_norm, details FROM transactions ORDER BY txn_date DESC, id DESC LIMIT 200`)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -134,7 +144,9 @@ func fmt2(v int64) string {
 }
 
 func Run(ctx context.Context, db *sql.DB, tmpl *web.Templates, cfg Config) error {
-	a := &App{DB: db, Tmpl: tmpl}
+	met := metrics.New(db)
+	met.Register(prometheus.DefaultRegisterer)
+	a := &App{DB: db, Tmpl: tmpl, Met: met}
 	srv := &http.Server{Addr: cfg.Addr, Handler: a.Router()}
 
 	go func() {
