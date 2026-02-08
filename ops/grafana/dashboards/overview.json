@@ -1,0 +1,75 @@
+{
+  "uid": "pf-overview",
+  "title": "Personal Finance – Overview",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": {"from": "now-90d", "to": "now"},
+  "panels": [
+    {
+      "type": "row",
+      "title": "This month",
+      "gridPos": {"x": 0, "y": 0, "w": 24, "h": 1}
+    },
+    {
+      "type": "stat",
+      "title": "Income (MTD)",
+      "gridPos": {"x": 0, "y": 1, "w": 8, "h": 5},
+      "targets": [{"expr": "pf_income_mtd_cents"}],
+      "fieldConfig": {
+        "defaults": {"unit": "currencyAUD"}
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Expense (MTD)",
+      "gridPos": {"x": 8, "y": 1, "w": 8, "h": 5},
+      "targets": [{"expr": "pf_expense_mtd_cents"}],
+      "fieldConfig": {
+        "defaults": {"unit": "currencyAUD"}
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Net (MTD)",
+      "gridPos": {"x": 16, "y": 1, "w": 8, "h": 5},
+      "targets": [{"expr": "pf_income_mtd_cents - pf_expense_mtd_cents"}],
+      "fieldConfig": {
+        "defaults": {"unit": "currencyAUD"}
+      }
+    },
+    {
+      "type": "barchart",
+      "title": "Spend by category (MTD)",
+      "gridPos": {"x": 0, "y": 6, "w": 24, "h": 10},
+      "targets": [
+        {"expr": "topk(12, pf_spend_by_category_mtd_cents)", "legendFormat": "{{category}}"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
+    },
+    {
+      "type": "barchart",
+      "title": "Top merchants (MTD)",
+      "gridPos": {"x": 0, "y": 16, "w": 24, "h": 10},
+      "targets": [
+        {"expr": "topk(12, pf_spend_by_merchant_mtd_cents)", "legendFormat": "{{merchant}}"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
+    },
+    {
+      "type": "row",
+      "title": "Last 6 months",
+      "gridPos": {"x": 0, "y": 26, "w": 24, "h": 1}
+    },
+    {
+      "type": "timeseries",
+      "title": "Income vs Expense by month",
+      "gridPos": {"x": 0, "y": 27, "w": 24, "h": 10},
+      "targets": [
+        {"expr": "pf_income_month_cents", "legendFormat": "income {{month}}"},
+        {"expr": "pf_expense_month_cents", "legendFormat": "expense {{month}}"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "currencyAUD"}}
+    }
+  ]
+}

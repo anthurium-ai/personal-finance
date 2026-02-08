@@ -27,7 +27,29 @@ Current importer supports the provided credit card CSV format with headers:
 Prometheus metrics at:
 - `GET /metrics`
 
-Grafana/Prometheus compose scaffolding TBD.
+Included metrics:
+- `pf_spend_by_category_mtd_cents{category}`
+- `pf_spend_by_merchant_mtd_cents{merchant}` (top 15)
+- `pf_income_mtd_cents`
+- `pf_expense_mtd_cents`
+- `pf_income_month_cents{month}` (last 6 months)
+- `pf_expense_month_cents{month}` (last 6 months)
+- `pf_spend_by_category_month_cents{month,category}` (last 6 months)
+
+## Grafana dashboards
+
+Bring up Grafana + Prometheus:
+
+```bash
+docker compose up
+```
+
+- Grafana: http://127.0.0.1:3000 (admin/admin)
+- Prometheus: http://127.0.0.1:9090
+
+Dashboards are provisioned from `ops/grafana/dashboards/`.
+
+Note: Prometheus scrapes `host.docker.internal:8787` (works on Mac/Windows; Linux may need an adjustment).
 
 ## Roadmap
 
