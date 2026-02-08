@@ -1,0 +1,27 @@
+{{define "transactions"}}{{template "layout" .}}{{end}}
+{{define "title"}}Transactions · pfportal{{end}}
+{{define "content"}}
+<h2>Transactions (latest 50)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Amount</th>
+      <th>Category</th>
+      <th>Merchant</th>
+      <th class="muted">Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Rows}}
+    <tr>
+      <td>{{.Date}}</td>
+      <td>{{.Amount}}</td>
+      <td>{{.Cat}}</td>
+      <td>{{.Merchant}}</td>
+      <td class="muted">{{.Details}}</td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+{{end}}

@@ -1,0 +1,29 @@
+{{define "imports"}}{{template "layout" .}}{{end}}
+{{define "title"}}Imports · pfportal{{end}}
+{{define "content"}}
+<h2>Imports</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>When</th>
+      <th>File</th>
+      <th>Total</th>
+      <th>Inserted</th>
+      <th>Skipped</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Rows}}
+    <tr>
+      <td>{{.ID}}</td>
+      <td class="muted">{{.Created}}</td>
+      <td>{{.File}}</td>
+      <td>{{.Total}}</td>
+      <td>{{.Inserted}}</td>
+      <td>{{.Skipped}}</td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+{{end}}

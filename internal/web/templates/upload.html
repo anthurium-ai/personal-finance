@@ -1,0 +1,25 @@
+{{define "upload"}}{{template "layout" .}}{{end}}
+
+{{define "title"}}Upload · pfportal{{end}}
+
+{{define "content"}}
+<h2>Upload transactions CSV</h2>
+<p class="muted">Imports are deduped by row hash, so re-uploading is safe.</p>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <div class="row">
+    <input type="file" name="file" accept=".csv,text/csv" required />
+    <button type="submit">Import</button>
+  </div>
+</form>
+
+{{if .Message}}
+  <p><span class="pill">{{.Message}}</span></p>
+{{end}}
+
+<h3>What next?</h3>
+<ul>
+  <li>Go to <a href="/transactions">Transactions</a> to edit categories/merchants.</li>
+  <li>Use Grafana for dashboards (Prometheus scrapes <code>/metrics</code>).</li>
+</ul>
+{{end}}
